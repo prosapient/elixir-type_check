@@ -85,11 +85,6 @@ defmodule TypeCheck.Defstruct do
       end
 
     res
-    |> Macro.to_string()
-    |> Code.format_string!()
-    |> IO.puts()
-
-    res
   end
 
   defp extract_fields(fields_with_types_ast) do
