@@ -32,7 +32,7 @@ defmodule TypeCheck.MixProject do
     case Mix.env() do
       :prod ->
         [
-          extra_applications: [:logger, :iex]
+          extra_applications: [:logger]
         ]
 
       _ ->
