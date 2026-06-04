@@ -26,7 +26,6 @@ defmodule TypeCheck.Builtin do
 
   """
 
-  require TypeCheck.Internals.ToTypespec
   # TypeCheck.Internals.ToTypespec.define_all()
 
   import TypeCheck.Internals.Bootstrap.Macros
