@@ -78,9 +78,19 @@ defmodule TypeCheck.Internals.PreExpander do
           {:impl, meta, [rewrite(module, env, options)]}
         end
 
-      ast = {:&, _, _args} ->
-        # Do not expand inside captures
-        ast
+      {:&, meta, args} ->
+        # Do not expand inside captures, but pin `__MODULE__` to the defining
+        # module. The type definition is relocated into a companion module
+        # (`TypeCheck.Internals.UserTypes.*`), where an unexpanded `__MODULE__`
+        # would otherwise resolve to that companion module and make captures
+        # like `&__MODULE__.gen/0` point at an undefined function.
+        rewritten_args =
+          Macro.prewalk(args, fn
+            {:__MODULE__, _meta, context} when is_atom(context) -> env.module
+            node -> node
+          end)
+
+        {:&, meta, rewritten_args}
 
       x when is_integer(x) or is_float(x) or is_atom(x) or is_bitstring(x) ->
         quote generated: true, location: :keep do
